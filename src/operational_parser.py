@@ -62,30 +62,46 @@ store = {
 }
 
 input_arguments = {
-    Q: Q, O: O, '{data}': D, 'POH({addr:d})': (A, B),
+    Q: Q, O: O, '{data}': D, 'POH[{addr}]': (A, B),
 }
 
 storing_arguments = {
-    Q: Q, Y: Y, MF2: MF2, MQ2: MQ2, DF2: DF2, DQ2: DQ2, 'POH({addr:d})': B
+    Q: Q, Y: Y, MF2: MF2, MQ2: MQ2, DF2: DF2, DQ2: DQ2, 'POH[{addr}]': B
 }
 
 
 def parse_argument(line: str, arguments: dict):
     for fmt, var in arguments.items():
-        if result := parse(fmt, line):
-            data = None
+        data = None
+        if fmt == line:
+            return data, var
+
+        elif result := parse(fmt, line):
             if B in var:
                 data = result['addr']
+
+                # Костыль для загрузки - указываем X когда адрес все равно подменят
+                if data == 'X':
+                    return '0000', var
                 
-                assert data > 0 and data < 16, f"POH address arguments are positive integers in range [0, 16): `{data}`"
+                data = int(data)
+                
+                assert data >= 0 and data < 16, f"POH address arguments are positive integers in range [0, 16): `{data}`"
                 
                 data = f"{data:04b}"
+
+                return data, var
             elif var == D:
                 data = result['data']
+
+                # Костыль для загрузки - указываем XXXX когда данные все равно подменят
+                if data == 'XXXX':
+                    return '0000', var
                 
                 assert isinstance(data, str) and len(data) == 4 and not (set(data) - {'0', '1'}), f"Data arguments should be binary strings of length 2: `{data}`"
 
-            return data, var
+                return data, var
+
     raise RuntimeError(f"Unknown argument fmt: `{line}`")
 
 
@@ -118,13 +134,13 @@ def parse_command_argument(line: str):
 
 def parse_command(line: str):
     for fmt, idx in commands.items():
-        if result := parse(fmt, line):        
-            return idx, parse.named
+        if result := parse(fmt, line, UTILITY):        
+            return idx, result.named
     raise RuntimeError(f"Unknown command fmr: {line}")
 
 
 def parse_line(line: str):
-    command, *storings = [l.strip() for l in line.spilt(',')]
+    command, *storings = [l.strip() for l in line.split(',')]
 
     # Named result notation: F/Q/B = cmd_result
     result_a = parse(command_fmt, command, UTILITY)
@@ -134,10 +150,12 @@ def parse_line(line: str):
     assert result_a or result_b, f"Unkwown storing fmt: {command}"
 
     if result_a:
+        command = result_a['cmd']
         dest = result_a['result']
         data, dest = parse_storing_argument(dest)
 
     elif result_b:
+        command = result_b['src']
         dest = result_b['dest']
         data, dest = parse_storing_argument(dest)
     
@@ -226,7 +244,7 @@ class OperationalParser(Parser):
             for mapping in [
                 getattr(self, arg).create(data[arg], reverse=True)
                 if arg in data else
-                getattr(self, arg).default(reverse=True)
+                getattr(self, arg).create_default(reverse=True)
                 for arg in [
                     'A', 'B', 'C', 'D', 'I'
                 ] if getattr(self, arg)

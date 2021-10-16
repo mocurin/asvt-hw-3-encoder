@@ -42,7 +42,7 @@ class TransitionalParser(Parser):
             
             if result['addr'] == 'END':
                 return {
-                    'End': '0'
+                    'End': '1'
                 }
             
             return {
