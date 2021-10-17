@@ -9,8 +9,8 @@ from src.parser import Multiparser
 FOLDER = 'HW3'
 
 
-ADDR1 = Argument('ADDR{}_1', 6)
-ADDR2 = Argument('ADDR{}_2', 6)
+ADDR1 = Argument('ADDR{}_1', 7)
+ADDR2 = Argument('ADDR{}_2', 7)
 A1    = Argument('A{}_1', 4)
 A2    = Argument('A{}_2', 4)
 B1    = Argument('B{}_1', 4)
@@ -37,8 +37,8 @@ u4 = Device(f'{FOLDER}/u9').bits(I1[:4], I2[:4])
 u5 = Device(f'{FOLDER}/u11').bits(I1[4:8], I2[4:8])
 u6 = Device(f'{FOLDER}/u22').bits(CX, END, [0] * 4)
 u7 = Device(f'{FOLDER}/u13').bits(I1[8], I2[8], C1, C2, [0] * 4)
-u8 = Device(f'{FOLDER}/u18').bits(ADDR1, [0] * 2)
-u9 = Device(f'{FOLDER}/u20').bits(ADDR2, [0] * 2)
+u8 = Device(f'{FOLDER}/u18').bits(ADDR1, 0)
+u9 = Device(f'{FOLDER}/u20').bits(ADDR2, 0)
 u5_a = NestedDevice(u5).bits(DECR1, DECR2, DECR3, 0)
 u7_a = NestedDevice(u7).bits(DECR4, DECR5, [0] * 4)
 
@@ -77,7 +77,7 @@ a7.  F = 0 && POH[13], F << 1 -> POH[13], Q << 1 -> Q ; F = 0 && POH[13], F << 1
 a8.  Y = POH[15] && Q                                 ; NOP                                              ; z1 ? a10 : a9        ;
 
 # Делаем аналогично для POH[1] и т.д.
-a9.  POH[1] = XXXX || 0                               ; NOP                                              ; a5                   ;
+a9.  POH[1] = XXXX || 0                               ; NOP                                              ; a10                  ;
 a10. NOP                                              ; Y = POH[15] && Q                                 ; z2 ? a12 : a11       ;
 a11. NOP                                              ; POH[1] = XXXX || 0                               ; a12                  ;
 
@@ -91,7 +91,7 @@ a16. NOP                                              ; POH[2] = XXXX || 0      
 # Маска 1000
 a17. F = 0 && POH[13], F << 1 -> POH[13], Q << 1 -> Q ; F = 0 && POH[13], F << 1 -> POH[13], Q << 1 -> Q ; a18                  ;
 a18. Y = POH[15] && Q                                 ; NOP                                              ; z1 ? a20 : a19       ;
-a19. POH[3] = XXXX || 0                               ; NOP                                              ; a5                   ;
+a19. POH[3] = XXXX || 0                               ; NOP                                              ; a20                  ;
 a20. NOP                                              ; Y = POH[15] && Q                                 ; z2 ? a22 : a21       ;
 a21. NOP                                              ; POH[3] = XXXX || 0                               ; a22                  ;
 

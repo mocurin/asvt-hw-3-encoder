@@ -55,13 +55,13 @@ class Multiparser:
             for subpart, parser in zip(line.upper().split(';'), self.parsers):                
                 subpart = subpart.strip()
 
-                if not subpart or subpart == 'NOP':
+                if not subpart:
                     continue
 
                 parser.feed(idx, subpart)
 
         return self
-    
+
     def finalize(self, unsafe: bool = False):
         for parser in self.parsers:
             parser.finalize(unsafe)

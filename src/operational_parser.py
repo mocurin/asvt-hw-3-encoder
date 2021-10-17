@@ -209,16 +209,20 @@ def parse_line(line: str):
     
     assert load_idx is not None, f"Unknown load arguments: {(var_l, var_r)}"
     
-    data = {
+    result = {
         var_l: left,
         var_r: right,
         'I': f"{storing_idx:03b}{command_idx:03b}{load_idx:03b}"
     }
-    if command_idx in {1, 2}:
-        assert args['const'] in {'0', '1'}
-        data['C'] = f"{args['const']:b}"
 
-    return data
+    if data and dest not in result:
+        result[dest] = data
+
+    if command_idx in {0, 1, 2}:
+        assert args['const'] in {'0', '1'}
+        result['C'] = f"{args['const']}"
+
+    return result
 
 
 @dataclass
