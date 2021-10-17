@@ -66,10 +66,10 @@ class NestedDevice(LabeledDevice):
         return self._host[item]
 
     def feed(self, idx, **kwargs):
-        self._host._data[idx] = [
-            kwargs.get(label, None) if prev is None else prev
-            for label, prev in zip(self._labels, self[idx])
+        self._host._data[idx] = data = [
+            kwargs.get(label, None)
+            for label in self._labels
         ]
-    
+
     def finalize(self, *args, **kwargs):
         return

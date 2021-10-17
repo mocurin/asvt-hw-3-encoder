@@ -64,7 +64,7 @@ class TransitionalParser(Parser):
         except Exception as e:
             raise RuntimeError(f"Line {idx} error: {e}") from e
         
-        print(data)
+        # print(data)
         
         data = {
             key: value

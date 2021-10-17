@@ -241,7 +241,7 @@ class OperationalParser(Parser):
         except Exception as e:
             raise RuntimeError(f"Line {idx} {type(self).__name__} error: {e}") from e
 
-        print(data)
+        print(idx, data)
         
         data = {
             key: value

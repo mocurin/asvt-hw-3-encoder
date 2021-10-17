@@ -130,28 +130,28 @@ a43. NOP                                              ; POH[7] = XXXX || 0      
 a44. NOP                                              ; NOP                                              ; END                  ;
 
 # Задание №2
-a64. NOP; NOP; x1 ? a66 : a65 ;
-a65. NOP; NOP; x2 ? a69 : a68 ;
-a66. NOP; NOP; x2 ? a67 : a69 ;
-a67. NOP; NOP; a71            ; -> y1, y5, y9
-a68. NOP; NOP; a75            ; -> y3, y4
-a69. NOP; NOP; a70            ; -> y2, y4
-a70. NOP; NOP; a71            ; -> y5, y9, y15
-a71. NOP; NOP; x3 ? a74 : a72 ;
-a72. NOP; NOP; a73            ; -> y7, y11
-a73. NOP; NOP; a64            ; -> yk
-a74. NOP; NOP; a75            ; -> y6, y13
-a75. NOP; NOP; a76            ; -> y7, y10
-a76. NOP; NOP; a77            ; -> y5, y9, y11
-a77. NOP; NOP; x2 ? a79 : a78 ;
-a78. NOP; NOP; x4 ? a81 : a82 ;
-a79. NOP; NOP; x4 ? a82 : a80 ;
-a80. NOP; NOP; a83            ; -> y2, y15, y18
-a81. NOP; NOP; a85            ; -> y12, y13
-a82. NOP; NOP; a83            ; -> y10, y12, y14
-a83. NOP; NOP; x3 ? a84 : a75 ;
-a84. NOP; NOP; a85            ; -> y2, y6, y8, y17, 16
-a85. NOP; NOP; a73            ; -> y10, y12, y15, y18
+a64. ; ; x1 ? a66 : a65 ;
+a65. ; ; x2 ? a69 : a68 ;
+a66. ; ; x2 ? a67 : a69 ;
+a67. ; ; a71            ; -> y1, y5, y9
+a68. ; ; a75            ; -> y3, y4
+a69. ; ; a70            ; -> y2, y4
+a70. ; ; a71            ; -> y5, y9, y15
+a71. ; ; x3 ? a74 : a72 ;
+a72. ; ; a73            ; -> y7, y11
+a73. ; ; a64            ; -> yk
+a74. ; ; a75            ; -> y6, y13
+a75. ; ; a76            ; -> y7, y10
+a76. ; ; a77            ; -> y5, y9, y11
+a77. ; ; x2 ? a79 : a78 ;
+a78. ; ; x4 ? a81 : a82 ;
+a79. ; ; x4 ? a82 : a80 ;
+a80. ; ; a83            ; -> y2, y15, y18
+a81. ; ; a85            ; -> y12, y13
+a82. ; ; a83            ; -> y10, y12, y14
+a83. ; ; x3 ? a84 : a75 ;
+a84. ; ; a85            ; -> y2, y6, y8, y17, 16
+a85. ; ; a73            ; -> y10, y12, y15, y18
 """
 
 Multiparser(parser1, parser2, parser3, parser4).parse(code).finalize(unsafe=True)

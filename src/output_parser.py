@@ -32,8 +32,6 @@ class OutputParser(Parser):
         except Exception as e:
             raise RuntimeError(f"Line {idx} {type(self).__name__} error: {e}") from e
         
-        print(data)
-
         result = dict()
         for arg in self._arguments:
             pieces = [piece for piece in data if piece in arg]
