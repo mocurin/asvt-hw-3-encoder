@@ -62,12 +62,14 @@ store = {
 }
 
 input_arguments = {
-    Q: Q, O: O, '{data}': D, 'POH[{addr}]': (A, B),
+    Q: Q, O: O, 'POH[{addr}]': (A, B), '{data}': D
 }
 
 storing_arguments = {
-    Q: Q, Y: Y, MF2: MF2, MQ2: MQ2, DF2: DF2, DQ2: DQ2, 'POH[{addr}]': B
+    F: F, Q: Q, Y: Y, MF2: MF2, MQ2: MQ2, DF2: DF2, DQ2: DQ2, 'POH[{addr}]': B
 }
+
+NOP = "Y = POH[0] + Q + 0"
 
 
 def parse_argument(line: str, arguments: dict):
@@ -142,6 +144,10 @@ def parse_command(line: str):
 def parse_line(line: str):
     command, *storings = [l.strip() for l in line.split(',')]
 
+    # No-side effects command
+    if command == 'NOP':
+        command = NOP
+
     # Named result notation: F/Q/B = cmd_result
     result_a = parse(command_fmt, command, UTILITY)
     # Inplace result notation: cmd_result -> F/Q/B
@@ -162,26 +168,20 @@ def parse_line(line: str):
     assert not (dest != F and storings), f"Shifts are only available when storing cmd result to F: {command}"
     
     if dest == F and storings:
-        storings = list()
+        _storings = list()
 
         for storing in storings:
             data, storing = parse_storing(storing)
             
-            storings.append(storing)
+            _storings.append(storing)
         
-        storings = tuple(storings)
+        storings = tuple(_storings)
     else:
         storings = (F, Y if dest == F else dest)
     
     storing_idx = store.get(storings)
     
     assert storing_idx is not None, f"Unknown storing arguments: {storings}"
-        
-    storing = tuple(
-        parse_storing(storing) for storing in storings
-    ) if dest == F and storings else (
-        F, Y if dest == F else dest
-    )
     
     command_idx, args = parse_command(command)
     
@@ -189,11 +189,11 @@ def parse_line(line: str):
     
     if A in var_l:
         var_l = A
-    
+
     right, var_r = parse_command_argument(args['right'])
     
     if B in var_r:
-        var_b = B
+        var_r = B
     
     # Load A B with B present in storing
     if var_l == A and var_r == B and data == left:

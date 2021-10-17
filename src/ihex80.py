@@ -10,16 +10,16 @@ def complement(value, bits) -> int:
     return value ^ ((2 ** bits) - 1)
 
 
-def lookback(gen, back=1) -> tuple:
+def lookback(gen, back: int = 1) -> tuple:
     gen = iter(gen)
     
     back = [next(gen) for _ in range(back)]
-    
+
     for value in gen:
         yield (*back, value)
         
         back = [*back[1:], value]
-        
+    
     yield (*back, None)
 
 
@@ -63,7 +63,7 @@ class IHEX80:
                     ''.join(memory[idx:jdx]),
                     chunksize, IHEXFieldType.BIN_DATA,
                 ) + '\n'
-                for (idx, jdx) in lookback(range(0, len(data), chunksize))
+                for (idx, jdx) in lookback(range(0, len(memory), chunksize))
                 if not all(sym == '0' for sym in memory[idx:jdx])
             ],
             cls.endl()
